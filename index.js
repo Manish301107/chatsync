@@ -53,7 +53,8 @@ io.on('connection', (socket) => {
         } else {
 
             // Single Chat management :
-            socket.on('join room', (name) => {
+            socket.on('join room', (nameAndPic) => {
+                let connected_data = nameAndPic.split('~')
                 if (rooms.length === 0 || rooms[rooms.length - 1].length === 2) {
                     rooms.push([]);
                 }
@@ -61,7 +62,7 @@ io.on('connection', (socket) => {
                 currentRoom = rooms[rooms.length - 1]
                 currentRoom.push(socket);
 
-                username = name
+                username = connected_data[0]
 
                 if (currentRoom.length === 1) {
 
@@ -69,19 +70,18 @@ io.on('connection', (socket) => {
                         socket.emit('connected', "Wait!! for connection")
 
                         let checkUser = setInterval(() => {
-                            console.log("Wait! for connection")
+                            // console.log("Wait! for connection")
                             findUserComdown++
                             if (currentRoom.length === 2) {
-                                socket.broadcast.emit('connected', `You are connected with ${name}~${name}`)
-                                console.log("Two user has been connected")
+                                socket.broadcast.emit('connected', `You are connected with ${connected_data[0]}~${connected_data[0]}`)
                                 IsOtherUserConnected = true
 
                                 if (IsOtherUserConnected) {
                                     clearInterval(checkUser)
                                 }
                             }
-                            console.log(findUserComdown)
-                            if (findUserComdown == 9) {
+                            // console.log(findUserComdown)
+                            if (findUserComdown == 59) {
                                 clearInterval(checkUser)
                                 socket.emit('notFound', "Not found Any people. Find again!!")
                             }
@@ -89,8 +89,7 @@ io.on('connection', (socket) => {
 
                     }
                 } else if (currentRoom.length === 2) {
-                    socket.broadcast.emit('connected', `You are connected with ${name}~${name}`)
-                    console.log("Two user has been connected!!")
+                    socket.broadcast.emit('connected', `You are connected with ${connected_data[0]}~${connected_data[0]}`)
                 }
             })
 
@@ -128,26 +127,10 @@ io.on('connection', (socket) => {
             });
         }
     })
-
-
-
-    // socket.on("name", (name) => {
-    //     console.log(`Name - ${name}`, socket.id)
-    //     socket.broadcast.emit("receive", `${name} ,${name} has been Connected`)
-
-    //     socket.on("message", (message) => {
-    //         console.log(message)
-    //         socket.broadcast.emit("receive", message)
-    //     })
-    //     socket.on('disconnect', ()=>{
-    //         socket.broadcast.emit("receive", `${name} ,${name} has been disconnected`)
-    //     })
-    // })
-
 });
 
 
 const PORT = process.env.PORT || 3011;
 server.listen(PORT, () => {
-    console.log(`Server is Running on PORT:${PORT}`)
-}) 
+    // console.log(`Server is Running on PORT:${PORT}`)
+})

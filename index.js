@@ -7,7 +7,7 @@ const http = require('http');
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "https://dapper-wisp-231948.netlify.app"
+        origin: "https://chatsync99.netlify.app"
     }
 });
 

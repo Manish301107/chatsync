@@ -18,6 +18,7 @@ const group = [];
 io.on('connection', (socket) => {
     let currentRoom = null;
     let username;
+    let profile_src;
     let IsOtherUserConnected = false;
     let findUserComdown = 0;
 
@@ -63,6 +64,7 @@ io.on('connection', (socket) => {
                 currentRoom.push(socket);
 
                 username = connected_data[0]
+                profile_src = connected_data[1]
 
                 if (currentRoom.length === 1) {
 
@@ -73,7 +75,7 @@ io.on('connection', (socket) => {
                             // console.log("Wait! for connection")
                             findUserComdown++
                             if (currentRoom.length === 2) {
-                                socket.broadcast.emit('connected', `You are connected with ${connected_data[0]}~${connected_data[0]}`)
+                                socket.broadcast.emit('connected', `You are connected with ${connected_data[0]}~${connected_data[0]}~${profile_src}`)
                                 IsOtherUserConnected = true
 
                                 if (IsOtherUserConnected) {
@@ -89,7 +91,7 @@ io.on('connection', (socket) => {
 
                     }
                 } else if (currentRoom.length === 2) {
-                    socket.broadcast.emit('connected', `You are connected with ${connected_data[0]}~${connected_data[0]}`)
+                    socket.broadcast.emit('connected', `You are connected with ${connected_data[0]}~${connected_data[0]}~${profile_src}`)
                 }
             })
 
@@ -101,7 +103,7 @@ io.on('connection', (socket) => {
                     if (senderSocket) {
                         // Use broadcast to send the message to all other clients in the same room
                         socket.to(currentRoom[0].id).to(currentRoom[1].id).emit('receivedMsg', message);
-                        socket.emit("connecterName", username)
+                        // socket.emit("connecterName", username)
                     }
                 }
             });
